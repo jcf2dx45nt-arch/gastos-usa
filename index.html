@@ -1056,14 +1056,13 @@ function renderResumo(){
     // Compute rolling balance day by day
     let carryover = 0;
     const dayRows = days.map(iso => {
-      const availToday = isFuture ? effectiveDailyBudget : effectiveDailyBudget + carryover;
+      const availToday = effectiveDailyBudget + carryover;
       const spentToday = spentByDay[iso] || 0;
       const balance = availToday - spentToday;
       const isFuture = iso > todayISO;
       const isToday = iso === todayISO;
       const row = { iso, availToday, spentToday, balance, carryover, isFuture, isToday };
-      if(!isFuture) carryover = balance > 0 ? balance : 0;
-      else carryover = 0; // dias futuros: não propaga acumulado
+      if(!isFuture) carryover = balance > 0 ? balance : 0; // carry only positive balance
       return row;
     });
 
